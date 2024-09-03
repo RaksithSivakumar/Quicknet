@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>QuickNet</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Josefin+Sans:ital,wght@0,100..700;1,100..700&display=swap">
+</head>
+<body>
+    <div class="container">
+        <h1>YOUR INTERNET SPEED</h1>
+        <div class="loader-widget"></div>
+        <span class="loader hide"></span>
+        <div class="loader-content">
+            <div class="content hide">24<small>Mbps</small></div>
+            <button>Check</button>
+        </div>
+    </div>
+</body>
+<script>
+    document.querySelector('button').addEventListener('click', function() {
+        var imageLink = 'https://upload.wikimedia.org/wikipedia/commons/thumb/6/64/Tokyo_Skytree_2023.jpg/375px-Tokyo_Skytree_2023.jpg';
+        var downloadSize = 8185374; // Size of the image in bytes
+        var time_start, time_end;
+        var downloadSrc = new Image();
+        
+        document.querySelector('.loader-content').classList.add('hide');
+        document.querySelector('.loader').classList.remove('hide');
+
+        time_start = new Date().getTime();
+        var cacheImg = "?nn=" + time_start;
+        downloadSrc.src = imageLink + cacheImg;
+
+        downloadSrc.onload = function () {
+            time_end = new Date().getTime();
+            var timeDuration = (time_end - time_start) / 1000; // Duration in seconds
+            var loadedBytes = downloadSize * 8; // Convert bytes to bits
+            var totalSpeed = ((loadedBytes / timeDuration) / 1024 / 1024).toFixed(2); // Speed in Mbps
+
+            let i = 0;
+            const animate = () => {
+                if (i < totalSpeed) {
+                    document.querySelector('.content').innerHTML = i.toFixed(2) + '<small>Mbps</small>';
+                    setTimeout(animate, 20);
+                    i += 0.05; // Increment speed more slowly to better match the totalSpeed
+                } else {
+                    document.querySelector('.content').innerHTML = totalSpeed + '<small>Mbps</small>';
+                }
+            };
+            
+            animate();
+            document.querySelector('.loader-content').classList.remove('hide');
+            document.querySelector('.loader').classList.add('hide');
+            document.querySelector('.content').classList.remove('hide');
+            this.innerText = 'CHECK AGAIN';
+        };
+    });
+</script>
+</html>
